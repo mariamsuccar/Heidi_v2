@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronDown, Mic } from 'lucide-react';
 
-export const Header: React.FC = () => {
+const Header: React.FC = () => {
   return (
     <div className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 flex-shrink-0 z-10">
       <div className="flex flex-col">
@@ -31,3 +31,5 @@ export const Header: React.FC = () => {
     </div>
   );
 };
+
+export default Header;
