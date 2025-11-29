@@ -3,28 +3,35 @@ import { Message } from "../types";
 
 const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+// Trigger phrases that activate the “MHR Query Source”
+const MHR_KEYWORDS = [
+  "vaccine", "immunisation", "immunization",
+  "medication", "medications",
+  "pathology", "bloods", "neutropenia",
+  "allergy", "allergic",
+  "scan", "ct", "imaging", "radiology",
+  "mhr", "my health record"
+];
+
+function isMhrQuery(text: string): boolean {
+  return MHR_KEYWORDS.some(word => text.toLowerCase().includes(word));
+}
+
+async function callMhrRpaEngine(question: string): Promise<string> {
+  const url = `/api/mhr-query?q=${encodeURIComponent(question)}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  return data.result;
+}
+
 const SYSTEM_INSTRUCTION = `
 You are "Heidi Assist", the AI clinician assistant inside Heidi Pro.
 
-You simulate an internal "MHR Query Source" which retrieves any patient-specific data
-through a behind-the-scenes RPA workflow that scans Best Practice and My Health Record.
+You use an internal "MHR Query Source"
+which retrieves My Health Record data extracted through a simulated RPA workflow.
 
-The RPA engine can read immunisations, medications, pathology, imaging, allergies,
-past medical history, hospital discharge summaries, and progress notes.
-
-DATA SOURCE FOR SIMULATION (Patient: John Doe, Male, 45):
-- Past Medical History: Hypertension (2018), Type 2 Diabetes (2020), Mild Osteoarthritis (2019), Appendicectomy (2005).
-- Medications: Metformin 1g twice daily, Perindopril 4mg daily, Atorvastatin 20mg nightly.
-- Allergies: Penicillin (mild rash).
-- Immunisations: Influenza 2023, COVID booster Jan 2024, Tetanus 2019, Typhoid 2018.
-- Pathology: HbA1c 6.8% (Feb 2024), Lipids WNL, eGFR > 90.
-- Imaging: Knee X-ray 2023 (mild medial compartment narrowing).
-
-RULES:
-1. Answer in one clinically concise sentence.
-2. No markdown formatting.
-3. If data is not found, respond: “No record of [item] found in My Health Record.”
-4. Tone must match Heidi Pro’s clinician assistant: precise and neutral.
+You ALWAYS respond in one clinically concise sentence,
+plain text, no emojis, no markdown.
 `;
 
 export const sendMessageToHeidi = async (
@@ -32,30 +39,37 @@ export const sendMessageToHeidi = async (
   userMessage: string
 ): Promise<string> => {
   try {
+    let rpaResult: string | null = null;
+
+    if (isMhrQuery(userMessage)) {
+      rpaResult = await callMhrRpaEngine(userMessage);
+    }
+
     const model = ai.getGenerativeModel({
       model: "gemini-2.5-flash",
       systemInstruction: SYSTEM_INSTRUCTION,
     });
 
-    // Convert chat history
-    const formattedHistory = history.slice(-8).map((m) => ({
-      role: m.role === "user" ? "user" : "model",
-      parts: [{ text: m.content }],
-    }));
-
-    // Use chat format
     const chat = model.startChat({
-      history: formattedHistory,
+      history: history.slice(-6).map(m => ({
+        role: m.role === "user" ? "user" : "model",
+        parts: [{ text: m.content }],
+      })),
       generationConfig: {
         temperature: 0.1,
         maxOutputTokens: 150,
       },
     });
 
-    const result = await chat.sendMessage(userMessage);
-    return result.response.text();
-  } catch (err) {
-    console.error("Gemini error:", err);
-    return "Unable to access MHR Source right now.";
+    const finalPrompt = rpaResult
+      ? `MHR_QUERY_RESULT: ${rpaResult}\nUser: ${userMessage}`
+      : userMessage;
+
+    const response = await chat.sendMessage(finalPrompt);
+    return response.response.text();
+
+  } catch (error) {
+    console.error("Heidi MHR engine error:", error);
+    return "Unable to retrieve My Health Record at this time.";
   }
 };
