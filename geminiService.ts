@@ -1,7 +1,7 @@
-import { GoogleGenAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Message } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenerativeAI({ apiKey: process.env.API_KEY });
 
 const SYSTEM_INSTRUCTION = `You are "Heidi Assist", the AI clinician assistant inside Heidi Pro.
 You respond in a concise, clinical, factual tone with no emojis and no markdown.
