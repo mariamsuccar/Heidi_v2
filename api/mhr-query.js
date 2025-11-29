@@ -1,23 +1,30 @@
-export default function handler(req, res) {
-  const q = (req.query.q || "").toLowerCase();
+const fs = require("fs");
+const path = require("path");
 
-  let result = "No matching information found in My Health Record.";
+module.exports = async (req, res) => {
+  const q = req.query.q?.toLowerCase() || "";
 
-  if (q.includes("ct") || q.includes("scan") || q.includes("imaging")) {
-    result = "CT of the head, neck and abdomen was performed in 2024.";
+  const filePath = path.join(process.cwd(), "public/mhr-data/patient.json");
+  const raw = fs.readFileSync(filePath, "utf8");
+  const data = JSON.parse(raw);
+
+  let answer = "No matching My Health Record data found.";
+
+  if (q.includes("vaccine") || q.includes("immunisation") || q.includes("immunization")) {
+    answer = `Typhoid vaccine administered in 2020.`;
   } 
-  else if (q.includes("vaccine") || q.includes("immunisation") || q.includes("immunization")) {
-    result = "Typhoid vaccine administered in 2020.";
-  } 
-  else if (q.includes("medication") || q.includes("drug")) {
-    result = "Current medication includes Paroxetine 200mg.";
-  } 
+  else if (q.includes("medication") || q.includes("medications")) {
+    answer = `Current medication: Paroxetine 200mg.`;
+  }
   else if (q.includes("neutropenia") || q.includes("pathology") || q.includes("blood")) {
-    result = "Mild neutropenia recorded in March 2025.";
-  } 
-  else if (q.includes("allergy") || q.includes("allergic")) {
-    result = "Penicillin allergy documented.";
+    answer = `Most recent pathology shows mild neutropenia in March 2025.`;
+  }
+  else if (q.includes("allergy")) {
+    answer = `Recorded allergy: Penicillin.`;
+  }
+  else if (q.includes("scan") || q.includes("ct") || q.includes("imaging")) {
+    answer = `Most recent imaging is a head, neck and abdomen CT from 2024.`;
   }
 
-  res.status(200).json({ result });
-}
+  res.status(200).json({ result: answer });
+};
