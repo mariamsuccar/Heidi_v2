@@ -13,7 +13,7 @@ const SUGGESTIONS = [
   "Recent pathology results"
 ];
 
-export const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, isLoading }) => {
+const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, isLoading }) => {
   const [text, setText] = useState('');
 
   const handleSend = () => {
@@ -84,3 +84,5 @@ export const InputArea: React.FC<InputAreaProps> = ({ onSendMessage, isLoading }
     </div>
   );
 };
+
+export default InputArea;
