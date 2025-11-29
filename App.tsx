@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import ChatArea from './components/ChatArea';
-import InputArea from './components/InputArea';
+import Sidebar from './Sidebar';
+import Header from './Header';
+import ChatArea from './ChatArea';
+import InputArea from './InputArea';
 import { Tab, Message } from './types';
 import { sendMessageToHeidi } from './services/geminiService';
 import { v4 as uuidv4 } from 'uuid'; // We'll implement a simple ID generator instead of uuid lib to avoid complex deps if possible, but standard practice is uuid. I'll use simple math random for simplicity in this generated file without npm install.
