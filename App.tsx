@@ -4,7 +4,7 @@ import Header from './Header';
 import ChatArea from './ChatArea';
 import InputArea from './InputArea';
 import { Tab, Message } from './types';
-import { sendMessageToHeidi } from './services/geminiService';
+import { sendMessageToHeidi } from './geminiService';
 import { v4 as uuidv4 } from 'uuid'; // We'll implement a simple ID generator instead of uuid lib to avoid complex deps if possible, but standard practice is uuid. I'll use simple math random for simplicity in this generated file without npm install.
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
