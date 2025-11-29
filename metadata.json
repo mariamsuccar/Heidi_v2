@@ -1,0 +1,5 @@
+{
+  "name": "Heidi Assist Pro",
+  "description": "A clinical AI assistant interface simulating My Health Record queries and patient note generation.",
+  "requestFramePermissions": []
+}
