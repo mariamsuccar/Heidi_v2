@@ -9,6 +9,8 @@ import { v4 as uuidv4 } from 'uuid'; // We'll implement a simple ID generator in
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
+console.log("KEY:", import.meta.env.VITE_GEMINI_API_KEY);
+
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.NOTE);
   const [messages, setMessages] = useState<Message[]>([]);
