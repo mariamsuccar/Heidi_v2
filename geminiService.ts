@@ -1,7 +1,9 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Message } from "../types";
 
-const ai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const ai = new GoogleGenerativeAI({
+  apiKey: process.env.GEMINI_API_KEY
+});
 
 // Trigger phrases that activate the “MHR Query Source”
 const MHR_KEYWORDS = [
