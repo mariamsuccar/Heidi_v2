@@ -6,7 +6,7 @@ interface ChatAreaProps {
   isLoading: boolean;
 }
 
-export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isLoading }) => {
+const ChatArea: React.FC<ChatAreaProps> = ({ messages, isLoading }) => {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -59,3 +59,5 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isLoading }) => {
     </div>
   );
 };
+
+export default ChatArea;
