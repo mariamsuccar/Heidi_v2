@@ -9,10 +9,10 @@ export default function handler(req, res) {
   else if (q.includes("vaccine") || q.includes("immunisation") || q.includes("immunization")) {
     result = "Typhoid vaccine administered in 2020.";
   } 
-  else if (q.includes("medication") || q.includes("medications") || q.includes("drug")) {
+  else if (q.includes("medication") || q.includes("drug")) {
     result = "Current medication includes Paroxetine 200mg.";
   } 
-  else if (q.includes("pathology") || q.includes("blood") || q.includes("neutropenia")) {
+  else if (q.includes("neutropenia") || q.includes("pathology") || q.includes("blood")) {
     result = "Mild neutropenia recorded in March 2025.";
   } 
   else if (q.includes("allergy") || q.includes("allergic")) {
