@@ -1,0 +1,18 @@
+{
+  "patient": "John Doe",
+  "immunisations": [
+    { "name": "Typhoid vaccine", "date": "2020" }
+  ],
+  "medications": [
+    { "name": "Paroxetine", "dose": "200mg" }
+  ],
+  "pathology": [
+    { "name": "Neutropenia", "severity": "Mild", "date": "March 2025" }
+  ],
+  "allergies": [
+    { "substance": "Penicillin", "reaction": "Allergy" }
+  ],
+  "imaging": [
+    { "type": "CT scan", "region": "Head, Neck, Abdomen", "date": "2024" }
+  ]
+}
