@@ -11,7 +11,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 
-export const Sidebar: React.FC = () => {
+const Sidebar: React.FC = () => {
   return (
     <div className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col flex-shrink-0 text-sm">
       {/* User Profile */}
