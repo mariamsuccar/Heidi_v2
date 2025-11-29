@@ -1,31 +1,23 @@
-import jwt from 'jsonwebtoken';
-import fetch from 'node-fetch';
+export default function handler(req, res) {
+  const q = (req.query.q || "").toLowerCase();
 
-export default async function handler(req, res) {
-  const { query } = req.query;
-  const { sessionId } = req.query;
+  let result = "No matching information found in My Health Record.";
 
-  // Generate JWT required by Heidi API
-  const token = jwt.sign(
-    {
-      email: "demo@example.com",
-      id: Math.floor(Math.random() * 1000000)
-    },
-    process.env.HEIDI_SHARED_SECRET, 
-    { expiresIn: "10m" }
-  );
+  if (q.includes("ct") || q.includes("scan") || q.includes("imaging")) {
+    result = "CT of the head, neck and abdomen was performed in 2024.";
+  } 
+  else if (q.includes("vaccine") || q.includes("immunisation") || q.includes("immunization")) {
+    result = "Typhoid vaccine administered in 2020.";
+  } 
+  else if (q.includes("medication") || q.includes("medications") || q.includes("drug")) {
+    result = "Current medication includes Paroxetine 200mg.";
+  } 
+  else if (q.includes("pathology") || q.includes("blood") || q.includes("neutropenia")) {
+    result = "Mild neutropenia recorded in March 2025.";
+  } 
+  else if (q.includes("allergy") || q.includes("allergic")) {
+    result = "Penicillin allergy documented.";
+  }
 
-  // Fetch data from Heidi session
-  const h = await fetch(
-    `https://api.heidihealth.com/sessions/${sessionId}`,
-    {
-      headers: { Authorization: `Bearer ${token}` }
-    }
-  );
-  const sessionData = await h.json();
-
-  res.status(200).json({
-    query,
-    sessionData
-  });
+  res.status(200).json({ result });
 }
